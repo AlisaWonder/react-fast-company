@@ -16,7 +16,7 @@ const SearchStatus = ({ users, searchStatusTyping }) => {
 };
 
 SearchStatus.propTypes = {
-    users: PropTypes.array.isRequired,
+    users: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     searchStatusTyping: PropTypes.func.isRequired
 };
 
