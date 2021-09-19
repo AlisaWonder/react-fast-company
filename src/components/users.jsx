@@ -13,19 +13,14 @@ const Users = ({ onDelete, onAddBookmark, users: allUsers }) => {
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const pageSize = 2;
+
     useEffect(() => {
-        //   console.log("send request");
         api.professions.fetchAll().then((data) => setProfessions(data));
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
-
-    //  useEffect(() => {
-    //      setCurrentPage(1);
-    //      console.log(professions);
-    //  }, [professions]);
 
     const qualitiesBar = (classEnd) => {
         return `badge bg-${classEnd} mx-1 fs-6`;
@@ -40,7 +35,11 @@ const Users = ({ onDelete, onAddBookmark, users: allUsers }) => {
         setCurrentPage(pageIndex);
     };
     const filteredUsers = selectedProf
-        ? allUsers.filter((user) => user.profession === selectedProf)
+        ? allUsers.filter(
+              (user) =>
+                  JSON.stringify(user.profession) ===
+                  JSON.stringify(selectedProf)
+          )
         : allUsers;
 
     const count = filteredUsers.length;
