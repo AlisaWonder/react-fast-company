@@ -1,25 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Qualities = (props) => {
+const Qualities = ({ color, name, _id }) => {
     return (
-        <td>
-            {props.qualities.map((colorBlock) => {
-                return (
-                    <span
-                        className={props.onClass(colorBlock.color)}
-                        key={props.qualities.id}
-                    >
-                        {colorBlock.name}
-                    </span>
-                );
-            })}
-        </td>
+        <span className={"badge m-1 bg-" + color} key={_id}>
+            {name}
+        </span>
     );
 };
 
 Qualities.propTypes = {
-    qualities: PropTypes.array.isRequired,
-    onClass: PropTypes.func.isRequired
+    color: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired
 };
 export default Qualities;

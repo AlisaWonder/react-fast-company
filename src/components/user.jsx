@@ -4,32 +4,31 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const User = ({
-    onQualitiesClass,
-    qualities,
+    _id,
     name,
+    qualities,
     profession,
     completedMeetings,
     rate,
     onDelete,
-    _id,
-    statusBookmark,
-    onAddBookmark
+    bookmark,
+    onToggleBookMark
 }) => {
     return (
-        <tr>
+        <tr key={_id}>
             <td>{name}</td>
-            <Qualities
-                onClass={onQualitiesClass}
-                qualities={qualities}
-            ></Qualities>
+            <td>
+                {qualities.map((qual) => (
+                    <Qualities key={qual._id} {...qual} />
+                ))}
+            </td>
             <td>{profession.name}</td>
             <td>{completedMeetings}</td>
             <td>{rate}/5</td>
             <td className="text-center">
                 <Bookmarks
-                    onAddBookmarks={onAddBookmark}
-                    statusBookmark={statusBookmark}
-                    user_id={_id}
+                    status={bookmark}
+                    onClick={() => onToggleBookMark(_id)}
                 ></Bookmarks>
             </td>
             <td>
@@ -45,7 +44,6 @@ const User = ({
 };
 
 User.propTypes = {
-    onQualitiesClass: PropTypes.func.isRequired,
     qualities: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
     profession: PropTypes.object.isRequired,
@@ -53,7 +51,7 @@ User.propTypes = {
     rate: PropTypes.number.isRequired,
     onDelete: PropTypes.func.isRequired,
     _id: PropTypes.string.isRequired,
-    statusBookmark: PropTypes.bool,
-    onAddBookmark: PropTypes.func.isRequired
+    bookmark: PropTypes.bool,
+    onToggleBookMark: PropTypes.func.isRequired
 };
 export default User;

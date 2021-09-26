@@ -10,7 +10,6 @@ const GroupList = ({
 }) => {
     if (!Array.isArray(items)) {
         return (
-            // console.log(Object.keys(items));
             <ul className="list-group">
                 {Object.keys(items).map((item) => (
                     <li
