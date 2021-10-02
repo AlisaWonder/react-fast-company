@@ -1,57 +1,40 @@
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useParams } from "react-router";
+import API from "../api";
 import Qualities from "./qualities";
-import Bookmarks from "./bookmark";
-import React from "react";
-import PropTypes from "prop-types";
 
-const User = ({
-    _id,
-    name,
-    qualities,
-    profession,
-    completedMeetings,
-    rate,
-    onDelete,
-    bookmark,
-    onToggleBookMark
-}) => {
-    return (
-        <tr key={_id}>
-            <td>{name}</td>
-            <td>
-                {qualities.map((qual) => (
-                    <Qualities key={qual._id} {...qual} />
-                ))}
-            </td>
-            <td>{profession.name}</td>
-            <td>{completedMeetings}</td>
-            <td>{rate}/5</td>
-            <td className="text-center">
-                <Bookmarks
-                    status={bookmark}
-                    onClick={() => onToggleBookMark(_id)}
-                ></Bookmarks>
-            </td>
-            <td>
+const User = () => {
+    const [userChoose, setUserChoose] = useState();
+    API.users.getById(useParams()._id).then((data) => {
+        setUserChoose(data);
+    });
+    const history = useHistory();
+
+    if (userChoose) {
+        return (
+            <>
+                <h2>{userChoose.name}</h2>
+                <h3>Профессия: {userChoose.profession.name}</h3>
+                <Qualities qualitites={userChoose.qualitites} />
+                <p>Всего встреч: {userChoose.completedMeetings}</p>
+                <p>Рейтинг: {userChoose.rate}</p>
                 <button
-                    className="btn btn-danger"
-                    onClick={onDelete.bind(this, _id)}
+                    onClick={() => {
+                        history.push("/users");
+                    }}
                 >
-                    Delete
+                    Все пользователи
                 </button>
-            </td>
-        </tr>
-    );
+            </>
+        );
+    }
+    return <h1>Loading...</h1>;
 };
 
 User.propTypes = {
-    qualities: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
-    profession: PropTypes.object.isRequired,
-    completedMeetings: PropTypes.number.isRequired,
-    rate: PropTypes.number.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    _id: PropTypes.string.isRequired,
-    bookmark: PropTypes.bool,
-    onToggleBookMark: PropTypes.func.isRequired
+    //  users: PropTypes.array,
+    //  id: PropTypes.string
 };
+
 export default User;

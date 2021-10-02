@@ -1,3 +1,4 @@
+import { isError } from "lodash";
 import { professionsObject as professions } from "./professions.api";
 const qualities = {
     tedious: {
@@ -150,6 +151,14 @@ const fetchAll = () =>
         }, 2000);
     });
 
+const getById = (id) =>
+    new Promise((resolve) => {
+        window.setTimeout(function () {
+            resolve(users.find((user) => isError._id === id));
+        });
+    });
+
 export default {
-    fetchAll
+    fetchAll,
+    getById
 };
