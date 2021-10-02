@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router";
 import API from "../api";
-import Qualities from "./qualities";
+import QualitesList from "./qualitiesList";
 
 const User = () => {
     const [userChoose, setUserChoose] = useState();
@@ -16,7 +16,7 @@ const User = () => {
             <>
                 <h2>{userChoose.name}</h2>
                 <h3>Профессия: {userChoose.profession.name}</h3>
-                <Qualities qualitites={userChoose.qualitites} />
+                <QualitesList qualities={userChoose.qualities} />
                 <p>Всего встреч: {userChoose.completedMeetings}</p>
                 <p>Рейтинг: {userChoose.rate}</p>
                 <button
