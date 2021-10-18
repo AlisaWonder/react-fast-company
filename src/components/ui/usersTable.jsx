@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Bookmark from "./bookmark";
-import QualitesList from "./qualitiesList";
-import Table from "./table";
+import Bookmark from "../common/bookmark";
+import Qualities from "./qualities";
+import Table from "../common/table";
+import { Link } from "react-router-dom";
 
 const UserTable = ({
     users,
@@ -13,20 +14,23 @@ const UserTable = ({
     ...rest
 }) => {
     const columns = {
-        name: { path: "name", name: "Имя" },
+        name: {
+            path: "name",
+            name: "Имя",
+            component: (user) => (
+                <Link to={`/users/${user._id}`}>{user.name}</Link>
+            )
+        },
         qualities: {
             name: "Качества",
-            component: (user) => <QualitesList qualities={user.qualities} />
+            component: (user) => <Qualities qualities={user.qualities} />
         },
-        professions: {
-            path: "profession.name",
-            name: "Профессия"
-        },
+        professions: { path: "profession.name", name: "Профессия" },
         completedMeetings: {
             path: "completedMeetings",
             name: "Встретился, раз"
         },
-        rate: { path: "rate", name: "Оценка", arrowStatus: "False" },
+        rate: { path: "rate", name: "Оценка" },
         bookmark: {
             path: "bookmark",
             name: "Избранное",
@@ -40,10 +44,10 @@ const UserTable = ({
         delete: {
             component: (user) => (
                 <button
-                    className="btn btn-danger"
                     onClick={() => onDelete(user._id)}
+                    className="btn btn-danger"
                 >
-                    Delete
+                    delete
                 </button>
             )
         }
