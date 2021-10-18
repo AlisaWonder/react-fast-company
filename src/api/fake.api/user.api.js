@@ -1,4 +1,3 @@
-import { isError } from "lodash";
 import { professionsObject as professions } from "./professions.api";
 const qualities = {
     tedious: {
@@ -154,7 +153,7 @@ const fetchAll = () =>
 const getById = (id) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
-            resolve(users.find((user) => isError._id === id));
+            resolve(users.find((user) => user._id === id));
         });
     });
 
