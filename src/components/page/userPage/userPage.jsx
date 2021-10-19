@@ -10,10 +10,7 @@ const UserPage = ({ userId }) => {
     useEffect(() => {
         api.users.getById(userId).then((data) => setUser(data));
     });
-    const handleClick = () => {
-        history.push("/users");
-    };
-    console.log(user);
+
     if (user) {
         return (
             <div>
@@ -22,7 +19,9 @@ const UserPage = ({ userId }) => {
                 <Qualities qualities={user.qualities} />
                 <p>completedMeetings: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
-                <button onClick={handleClick}>Все Пользователи</button>
+                <button onClick={() => history.push(`/users/${userId}/edit`)}>
+                    Изменить
+                </button>
             </div>
         );
     } else {
