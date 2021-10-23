@@ -5,11 +5,15 @@ import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
 
 const UserPage = ({ userId }) => {
-    const history = useHistory();
     const [user, setUser] = useState();
+    const history = useHistory();
+
     useEffect(() => {
-        api.users.getById(userId).then((data) => setUser(data));
-    });
+        api.users.getById(userId).then((data) => {
+            setUser(data);
+            console.log(user);
+        });
+    }, []);
 
     if (user) {
         return (
@@ -18,6 +22,7 @@ const UserPage = ({ userId }) => {
                 <h2>Профессия: {user.profession.name}</h2>
                 <Qualities qualities={user.qualities} />
                 <p>completedMeetings: {user.completedMeetings}</p>
+                <p>Email: {user.email}</p>
                 <h2>Rate: {user.rate}</h2>
                 <button onClick={() => history.push(`/users/${userId}/edit`)}>
                     Изменить

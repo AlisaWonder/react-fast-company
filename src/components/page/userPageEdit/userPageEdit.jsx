@@ -1,11 +1,11 @@
 import React from "react";
-import RegisterForm from "../../ui/registerForm";
+import EditForm from "../../ui/editForm";
 
 const UserPageEdit = () => {
     return (
         <div className="container mt-5">
             <h3 className="mb-4">Редактировать пользователя</h3>
-            <RegisterForm />
+            <EditForm />
         </div>
     );
 };

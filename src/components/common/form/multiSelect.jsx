@@ -34,7 +34,7 @@ const MultiSelectField = ({ options, onChange, name, label }) => {
 MultiSelectField.propTypes = {
     onChange: PropTypes.func,
     options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    name: PropTypes.string,
+    name: PropTypes.object,
     label: PropTypes.string
 };
 
