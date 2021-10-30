@@ -1,4 +1,5 @@
 export function calculateDate(timestamp) {
+    let displayDate = "";
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const dateComment = new Date(Number(timestamp));
@@ -9,12 +10,24 @@ export function calculateDate(timestamp) {
     const hours = min / 60;
     const days = hours / 24;
 
-    let options = { hour: "numeric", minute: "numeric" };
-    if (days >= 1) {
-        options = { day: "numeric", month: "long" };
+    if (hours > 1) {
+        let options = { hour: "numeric", minute: "numeric" };
+        if (days >= 1) {
+            options = { day: "numeric", month: "long" };
+        }
+        if (currentYear > commentYear) {
+            options = { day: "numeric", month: "long", year: "numeric" };
+        }
+        return dateComment.toLocaleString("ru", options);
     }
-    if (currentYear > commentYear) {
-        options = { day: "numeric", month: "long", year: "numeric" };
+    if (min >= 30) {
+        displayDate = "оставлен 30 минут назад";
+    } else if (min >= 10) {
+        displayDate = "оставлен 10 минут назад";
+    } else if (min >= 5) {
+        displayDate = "оставлен 5 минут назад";
+    } else {
+        displayDate = "оставлен 1 минуту назад";
     }
-    return dateComment.toLocaleString("ru", options);
+    return displayDate;
 }

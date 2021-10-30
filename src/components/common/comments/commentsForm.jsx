@@ -20,7 +20,6 @@ const CommentsForm = ({ users, onSubmit }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
-
         if (!isValid) return;
         onSubmit(data);
         setData({ name: "", content: "" });

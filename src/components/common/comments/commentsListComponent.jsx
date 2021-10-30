@@ -6,7 +6,6 @@ import CommentsForm from "./commentsForm";
 
 const CommentsListComponent = () => {
     const [users, setUsers] = useState();
-    const [render, setRender] = useState(false);
     const [comments, setComments] = useState([]);
     const params = useParams();
     const { userId } = params;
@@ -21,26 +20,22 @@ const CommentsListComponent = () => {
             .then((data) => setComments(data));
     }, []);
 
-    //  const handleChange = (target) => {
-    //      setUsers((prevState) => ({
-    //          ...prevState,
-    //          [target.name]: target.value
-    //      }));
-    //  };
-
     const handleSubmit = (data) => {
         api.commentsApi.add({
             pageId: userId,
             userId: data.name,
             content: data.content
         });
-        setRender(!render);
+        api.commentsApi
+            .fetchCommentsForUser(userId)
+            .then((data) => setComments(data));
     };
 
     const handleDeleteComment = (commentId) => {
         api.commentsApi.remove(commentId);
-        setRender(!render);
-        console.log("удалено");
+        api.commentsApi
+            .fetchCommentsForUser(userId)
+            .then((data) => setComments(data));
     };
     if (comments) {
         return (
