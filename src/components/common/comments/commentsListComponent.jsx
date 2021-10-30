@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comment from "./comment";
 import api from "../../../api";
-// import commentsApi from "../../../api/fake.api/comments.api";
-// import SelectField from "../form/selectField";
 import CommentsForm from "./commentsForm";
 
 const CommentsListComponent = () => {
-    const [, setUsers] = useState();
+    const [users, setUsers] = useState();
+    const [render, setRender] = useState(false);
     const [comments, setComments] = useState([]);
     const params = useParams();
     const { userId } = params;
@@ -29,9 +28,18 @@ const CommentsListComponent = () => {
     //      }));
     //  };
 
+    const handleSubmit = (data) => {
+        api.commentsApi.add({
+            pageId: userId,
+            userId: data.name,
+            content: data.content
+        });
+        setRender(!render);
+    };
+
     const handleDeleteComment = (commentId) => {
         api.commentsApi.remove(commentId);
-        //   setRenderComment(!renderComment);
+        setRender(!render);
         console.log("удалено");
     };
     if (comments) {
@@ -42,7 +50,10 @@ const CommentsListComponent = () => {
                     <div className="card-body ">
                         <div>
                             <h2>New comment</h2>
-                            <CommentsForm />
+                            <CommentsForm
+                                users={users}
+                                onSubmit={handleSubmit}
+                            />
                         </div>
                     </div>
                 </div>
@@ -50,16 +61,21 @@ const CommentsListComponent = () => {
                     <div className="card-body ">
                         <h2>Comments</h2>
                         <hr />
-                        {comments.map((comment) => (
-                            <Comment
-                                key={comment._id}
-                                commentId={comment._id}
-                                userId={comment.userId}
-                                content={comment.content}
-                                handleDeleteComment={handleDeleteComment}
-                                date={comment.created_at}
-                            />
-                        ))}
+                        {comments
+                            .sort(
+                                (a, b) =>
+                                    Number(b.created_at) - Number(a.created_at)
+                            )
+                            .map((comment) => (
+                                <Comment
+                                    key={comment._id}
+                                    commentId={comment._id}
+                                    userId={comment.userId}
+                                    content={comment.content}
+                                    handleDeleteComment={handleDeleteComment}
+                                    date={comment.created_at}
+                                />
+                            ))}
                     </div>
                 </div>
             </>

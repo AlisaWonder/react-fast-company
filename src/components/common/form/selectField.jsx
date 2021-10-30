@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const SelectField = ({
     label,
+    name,
     value,
     onChange,
     defaultOption,
@@ -19,7 +20,7 @@ const SelectField = ({
                   name: options[opt].name,
                   value: options[opt]._id
               }))
-            : options;
+            : options.map((opt) => ({ name: opt.name, value: opt._id }));
 
     const handleChange = ({ target }) => {
         onChange({ name: target.name, value: target.value });
@@ -34,7 +35,7 @@ const SelectField = ({
                 className={getInputClasses()}
                 id="validationCustom04"
                 required
-                name="profession"
+                name={name}
                 value={value}
                 onChange={handleChange}
             >
@@ -51,8 +52,14 @@ const SelectField = ({
     );
 };
 
+SelectField.defaultProps = {
+    name: "profession",
+    options: []
+};
+
 SelectField.propTypes = {
     label: PropTypes.string,
+    name: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func,
     defaultOption: PropTypes.string,

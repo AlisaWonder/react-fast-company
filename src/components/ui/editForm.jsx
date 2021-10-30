@@ -78,6 +78,10 @@ const EditForm = () => {
         return Object.keys(errors).length === 0;
     };
 
+    const handleBack = () => {
+        history.push(`/users/${userId}`);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
@@ -91,54 +95,62 @@ const EditForm = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField
-                label="Name:"
-                name="name"
-                value={data.name}
-                onChange={handleChange}
-                error={errors.name}
-            />
-            <TextField
-                label="Email:"
-                name="email"
-                value={data.email}
-                onChange={handleChange}
-                error={errors.email}
-            />
-            <SelectField
-                label="Выберите вашу профессию"
-                defaultOption={data.profession.name}
-                options={professions}
-                onChange={handleChange}
-                value={data.profession._id}
-            />
-            <RadioField
-                options={[
-                    { name: "Male", value: "male" },
-                    { name: "Female", value: "female" },
-                    { name: "Other", value: "other" }
-                ]}
-                onChange={handleChange}
-                value={data.sex}
-                name="sex"
-                label="Выберите ваш пол"
-            />
-            <MultiSelectField
-                options={qualities}
-                defaultOption={data.qualities}
-                onChange={handleChange}
-                name="qualities"
-                label="Выберите ваши качества"
-            />
+        <>
             <button
-                type="submit"
-                disabled={!isValid}
                 className="btn btn-primary w-100 mx-auto"
+                onClick={handleBack}
             >
-                Обновить
+                Назад
             </button>
-        </form>
+            <form onSubmit={handleSubmit}>
+                <TextField
+                    label="Name:"
+                    name="name"
+                    value={data.name}
+                    onChange={handleChange}
+                    error={errors.name}
+                />
+                <TextField
+                    label="Email:"
+                    name="email"
+                    value={data.email}
+                    onChange={handleChange}
+                    error={errors.email}
+                />
+                <SelectField
+                    label="Выберите вашу профессию"
+                    defaultOption={data.profession.name}
+                    options={professions}
+                    onChange={handleChange}
+                    value={data.profession._id}
+                />
+                <RadioField
+                    options={[
+                        { name: "Male", value: "male" },
+                        { name: "Female", value: "female" },
+                        { name: "Other", value: "other" }
+                    ]}
+                    onChange={handleChange}
+                    value={data.sex}
+                    name="sex"
+                    label="Выберите ваш пол"
+                />
+                <MultiSelectField
+                    options={qualities}
+                    defaultOption={data.qualities}
+                    onChange={handleChange}
+                    name="qualities"
+                    label="Выберите ваши качества"
+                />
+                <button
+                    type="submit"
+                    disabled={!isValid}
+                    className="btn btn-primary w-100 mx-auto"
+                >
+                    Обновить
+                </button>
+            </form>
+        </>
     );
 };
 
