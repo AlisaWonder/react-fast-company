@@ -1,10 +1,12 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+
 import Users from "./layouts/users";
 import NavBar from "./components/ui/navBar";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
 import UserPageEdit from "./components/page/userPageEdit/userPageEdit";
+import { ToastContainer } from "react-toastify";
 
 function App() {
     return (
@@ -17,6 +19,7 @@ function App() {
                 <Route path="/" exact component={Main} />
                 <Redirect to="/" />
             </Switch>
+            <ToastContainer />
         </>
     );
 }
