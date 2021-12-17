@@ -7,15 +7,21 @@ import Main from "./layouts/main";
 import Login from "./layouts/login";
 import UserPageEdit from "./components/page/userPageEdit/userPageEdit";
 import { ToastContainer } from "react-toastify";
+import { ProfessionProvider } from "./hooks/useProfession";
 
 function App() {
     return (
         <>
             <NavBar />
             <Switch>
-                <Route path="/users/:userId/edit" component={UserPageEdit} />
-                <Route path="/users/:userId?" component={Users} />
-                <Route path="/login/:type?" component={Login} />
+                <ProfessionProvider>
+                    <Route
+                        path="/users/:userId/edit"
+                        component={UserPageEdit}
+                    />
+                    <Route path="/users/:userId?" component={Users} />
+                    <Route path="/login/:type?" component={Login} />
+                </ProfessionProvider>
                 <Route path="/" exact component={Main} />
                 <Redirect to="/" />
             </Switch>
