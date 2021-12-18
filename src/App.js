@@ -5,7 +5,6 @@ import Users from "./layouts/users";
 import NavBar from "./components/ui/navBar";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
-import UserPageEdit from "./components/page/userPageEdit/userPageEdit";
 import { ToastContainer } from "react-toastify";
 import { ProfessionProvider } from "./hooks/useProfession";
 import { QualitiesProvider } from "./hooks/useQualities";
@@ -14,20 +13,21 @@ function App() {
     return (
         <>
             <NavBar />
-            <Switch>
-                <ProfessionProvider>
-                    <QualitiesProvider>
+
+            <ProfessionProvider>
+                <QualitiesProvider>
+                    <Switch>
                         <Route
-                            path="/users/:userId/edit"
-                            component={UserPageEdit}
+                            path="/users/:userId?/:edit?"
+                            component={Users}
                         />
-                        <Route path="/users/:userId?" component={Users} />
                         <Route path="/login/:type?" component={Login} />
-                    </QualitiesProvider>
-                </ProfessionProvider>
-                <Route path="/" exact component={Main} />
-                <Redirect to="/" />
-            </Switch>
+                        <Route path="/" exact component={Main} />
+                        <Redirect to="/" />
+                    </Switch>
+                </QualitiesProvider>
+            </ProfessionProvider>
+
             <ToastContainer />
         </>
     );
