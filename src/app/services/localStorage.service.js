@@ -17,25 +17,26 @@ export function setTokens({
 }
 
 export function getAccessToken() {
-    localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
 }
 export function getRefreshToken() {
-    localStorage.getItem(REFRESH_KEY);
+    return localStorage.getItem(REFRESH_KEY);
 }
 
 export function getTokenExpiresDate() {
-    localStorage.getItem(EXPIRES_KEY);
+    return localStorage.getItem(EXPIRES_KEY);
 }
 
 export function getUserId() {
-    localStorage.getItem(USERID_KEY);
+    return localStorage.getItem(USERID_KEY);
 }
 
 const localStorageService = {
     setTokens,
     getAccessToken,
     getRefreshToken,
-    getTokenExpiresDate
+    getTokenExpiresDate,
+    getUserId
 };
 
 export default localStorageService;

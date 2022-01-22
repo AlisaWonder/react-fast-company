@@ -105,7 +105,7 @@ const AuthProvider = ({ children }) => {
 
     async function getUserData() {
         try {
-            const { content } = await userService.getCurrentUser;
+            const { content } = await userService.getCurrentUser();
             setUser(content);
         } catch (error) {
             errorCatcher(error);
