@@ -60,8 +60,11 @@ const LoginForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
+        const newData = {
+            ...data
+        };
         try {
-            await signIn(data);
+            await signIn(newData);
             history.push("/");
         } catch (error) {
             setErrors(error);
