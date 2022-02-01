@@ -1,80 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-import api from "../../../api";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radio.Field";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
+import { useQualities } from "../../../hooks/useQualities";
+import { useProfessions } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
+    const { currentUser, updateUser } = useAuth();
+    const [user, setUser] = useState(currentUser);
     const { userId } = useParams();
     const history = useHistory();
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState({
-        email: "",
-        password: "",
-        profession: "",
-        sex: "male",
-        qualities: []
-    });
-    const [professions, setProfession] = useState([]);
-    const [qualities, setQualities] = useState({});
+    const { professions, getProfession } = useProfessions();
+    const { qualities, getQuality } = useQualities();
     const [errors, setErrors] = useState({});
-    const getProfessionById = (id) => {
-        for (const prof in professions) {
-            const profData = professions[prof];
-            if (profData._id === id) return profData;
+    const isValid = Object.keys(errors).length === 0;
+
+    useEffect(() => validate(), [user]);
+
+    useEffect(() => {
+        if (userId !== currentUser._id) {
+            history.push(`/users/${currentUser._id}/edit`);
         }
-    };
-    const getQualities = (elements) => {
-        const qualitiesQrray = [];
-        for (const elem of elements) {
-            for (const qualy in qualities) {
-                if (elem.value === qualities[qualy]._id) {
-                    qualitiesQrray.push(qualities[qualy]);
-                }
-            }
+    }, []);
+
+    const handleChange = (target) => {
+        let userData = target.value;
+        console.log(target);
+        if (target.name === "qualities") {
+            // userData = target.value.map((v) => getQuality(v.value));
+            userData = target.value.map((v) => v.value);
+            console.log(userData);
         }
-        return qualitiesQrray;
+        setUser((prev) => ({ ...prev, [target.name]: userData }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const isValid = validate();
-        if (!isValid) return;
-        const { profession, qualities } = data;
-        api.users
-            .update(userId, {
-                ...data,
-                profession: getProfessionById(profession),
-                qualities: getQualities(qualities)
-            })
-            .then((data) => history.push(`/users/${data._id}`));
-        console.log(data);
+        updateUser(user);
+        history.push(`/users/${userId}`);
     };
-    const transformData = (data) => {
-        return data.map((qual) => ({ label: qual.name, value: qual._id }));
-    };
-    useEffect(() => {
-        setIsLoading(true);
-        api.users.getById(userId).then(({ profession, qualities, ...data }) =>
-            setData((prevState) => ({
-                ...prevState,
-                ...data,
-                qualities: transformData(qualities),
-                profession: profession._id
-            }))
-        );
-        api.qualities.fetchAll().then((data) => setQualities(data));
-        api.professions.fetchAll().then((data) => setProfession(data));
-    }, []);
-    useEffect(() => {
-        if (data._id) setIsLoading(false);
-    }, [data]);
 
-    const validatorConfog = {
+    const goBack = () => {
+        history.push(`/user/${userId}`);
+    };
+
+    const validatorConfig = {
         email: {
             isRequired: {
                 message: "Электронная почта обязательна для заполнения"
@@ -83,86 +58,92 @@ const EditUserPage = () => {
                 message: "Email введен некорректно"
             }
         },
-
         name: {
             isRequired: {
                 message: "Введите ваше имя"
             }
         }
     };
-    useEffect(() => validate(), [data]);
-    const handleChange = (target) => {
-        setData((prevState) => ({
-            ...prevState,
-            [target.name]: target.value
-        }));
-    };
+
     const validate = () => {
-        const errors = validator(data, validatorConfog);
+        const errors = validator(user, validatorConfig);
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-    const isValid = Object.keys(errors).length === 0;
+
+    const professionList = professions.map((p) => ({
+        label: p.name,
+        value: p._id
+    }));
+
+    //  const qualitiesList = qualities.map((q) => ({
+    //      label: q.name,
+    //      value: q._id
+    //  }));
+
+    if (!user || qualities.length === 0 || professionList.length === 0) {
+        return "Loading...";
+    }
+
+    // console.log(user.qualities.map((q) => getQuality(q).name));
+
     return (
         <div className="container mt-5">
-            <BackHistoryButton />
+            <BackHistoryButton onclick={goBack} />
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {!isLoading && Object.keys(professions).length > 0 ? (
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                label="Имя"
-                                name="name"
-                                value={data.name}
-                                onChange={handleChange}
-                                error={errors.name}
-                            />
-                            <TextField
-                                label="Электронная почта"
-                                name="email"
-                                value={data.email}
-                                onChange={handleChange}
-                                error={errors.email}
-                            />
-                            <SelectField
-                                label="Выбери свою профессию"
-                                defaultOption="Choose..."
-                                name="profession"
-                                options={professions}
-                                onChange={handleChange}
-                                value={data.profession}
-                                error={errors.profession}
-                            />
-                            <RadioField
-                                options={[
-                                    { name: "Male", value: "male" },
-                                    { name: "Female", value: "female" },
-                                    { name: "Other", value: "other" }
-                                ]}
-                                value={data.sex}
-                                name="sex"
-                                onChange={handleChange}
-                                label="Выберите ваш пол"
-                            />
-                            <MultiSelectField
-                                defaultValue={data.qualities}
-                                options={qualities}
-                                onChange={handleChange}
-                                values
-                                name="qualities"
-                                label="Выберите ваши качесвта"
-                            />
-                            <button
-                                type="submit"
-                                disabled={!isValid}
-                                className="btn btn-primary w-100 mx-auto"
-                            >
-                                Обновить
-                            </button>
-                        </form>
-                    ) : (
-                        "Loading..."
-                    )}
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Имя"
+                            name="name"
+                            value={user.name}
+                            onChange={handleChange}
+                            error={errors.name}
+                        />
+                        <TextField
+                            label="Электронная почта"
+                            name="email"
+                            value={user.email || " "}
+                            onChange={handleChange}
+                            error={errors.email}
+                        />
+                        <SelectField
+                            label="Выбери свою профессию"
+                            defaultOption={getProfession(user.profession).name}
+                            name="profession"
+                            options={professionList}
+                            onChange={handleChange}
+                            value={user.profession}
+                            error={errors.profession}
+                        />
+                        <RadioField
+                            options={[
+                                { name: "Male", value: "male" },
+                                { name: "Female", value: "female" },
+                                { name: "Other", value: "other" }
+                            ]}
+                            value={user.sex}
+                            name="sex"
+                            onChange={handleChange}
+                            label="Выберите ваш пол"
+                        />
+                        <MultiSelectField
+                            defaultValue={user.qualities.map((q) =>
+                                getQuality(q)
+                            )}
+                            options={qualities}
+                            onChange={handleChange}
+                            name="qualities"
+                            label="Выберите ваши качества"
+                        />
+                        <button
+                            type="submit"
+                            disabled={!isValid}
+                            className="btn btn-primary w-100 mx-auto"
+                        >
+                            Обновить
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

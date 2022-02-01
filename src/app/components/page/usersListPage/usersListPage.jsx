@@ -20,10 +20,10 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
 
-    const handleDelete = (userId) => {
-        console.log("delete user");
-        // setUsers(users.filter((user) => user._id !== userId));
-    };
+    //  const handleDelete = (userId) => {
+    //   console.log("delete user");
+    // setUsers(users.filter((user) => user._id !== userId));
+    // };
     const handleToggleBookMark = (id) => {
         const newArray = users.map((user) => {
             if (user._id === id) {
@@ -113,7 +113,7 @@ const UsersListPage = () => {
                         users={usersCrop}
                         onSort={handleSort}
                         selectedSort={sortBy}
-                        onDelete={handleDelete}
+                        // onDelete={handleDelete}
                         onToggleBookMark={handleToggleBookMark}
                     />
                 )}
